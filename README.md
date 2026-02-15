@@ -21,11 +21,12 @@ ightarrow 1.15$ shift range used in Black Forest Labs' Flux and Lumina-Next.
 
 ## Installation
 
-1. Navigate to your ComfyUI installation directory.
-2. Go to `custom_nodes/`.
-3. Create a folder named `ComfyUI-FlowMatch-Advanced`.
-4. Copy `__init__.py` and `flowmatch_nodes.py` into that folder.
-5. Restart ComfyUI.
+1. Navigate to your `ComfyUI/custom_nodes/` directory.
+2. Clone this repository:
+   ```bash
+   git clone https://github.com/supSugam/ComfyUI-FlowMatch-Advanced
+   ```
+3. Restart ComfyUI.
 
 ## Usage
 
