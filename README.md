@@ -2,12 +2,17 @@
 
 Custom nodes to make ComfyUI sampling closer to `ai-toolkit` flow-matching behavior for **Flux**, **Qwen-Image**, and **Z-Image**.
 
-## Nodes
+## Dependencies
 
-- `FlowMatch Sigmas (ai-toolkit style)`  
-  Outputs `SIGMAS` for `SamplerCustomAdvanced` using ai-toolkit-style formulas and defaults.
-- `DiT FlowMatch Model (ai-toolkit style)`  
-  Patches `model_sampling` with a real Comfy sampling object (Comfy-native patching), not a callback.
+- This custom node has a `requirements.txt` and needs:
+  - ai-toolkit-matched `diffusers` pinned to commit `8600b4c10d67b0ce200f664204358747bd53c775`
+- If you install manually, run in your ComfyUI Python environment:
+  - `pip install -r custom_nodes/ComfyUI-FlowMatch-Advanced/requirements.txt`
+
+## Node
+
+- `FlowMatch Sampler (ai-toolkit exact)`  
+  Single all-in-one sampler node: patches model sampling, builds ai-toolkit flowmatch sigmas, and runs sampling directly.
 
 ## Model Presets
 
@@ -15,20 +20,18 @@ Custom nodes to make ComfyUI sampling closer to `ai-toolkit` flow-matching behav
 - `qwen`: dynamic shift (`base_shift=0.5`, `max_shift=0.9`, `max_seq_len=8192`)
 - `z-image`: static shift (`shift=3.0`)
 
-## Recommended Workflow (Closest to ai-toolkit)
+## Workflow
 
 1. Load your model and LoRA.
-2. Use `DiT FlowMatch Model (ai-toolkit style)` on the model (set `model_type=auto` unless needed).
-3. Use `FlowMatch Sigmas (ai-toolkit style)` to generate `SIGMAS`.
-4. Run `SamplerCustomAdvanced`:
-   - sampler: `euler` (or `res_multistep` if that is your trained setup)
-   - sigmas: from `FlowMatch Sigmas (ai-toolkit style)`
-   - guider: `CFGGuider` (typically `cfg=1.0` for flow models)
-5. Decode with VAE.
+2. Use `FlowMatch Sampler (ai-toolkit exact)`:
+   - `sampler_name=euler` (or `res_multistep` if your training setup uses it)
+   - defaults match this repo's `config.yaml` sample block (`model_type=z-image`, `seed=42`, `steps=8`, `guidance_scale=1`, `width=768`, `height=1024`)
+   - switch `model_type` only when sampling non Z-Image models
+   - `width/height` must match your generation resolution
+3. Decode the returned latent with VAE.
 
 ## Notes
 
-- This is designed for the `SamplerCustomAdvanced` path.  
-  `KSampler` cannot directly inject this exact custom sigma schedule.
+- This node is the only supported path in this repo.
 - `force_aitk_timesteps=true` uses `1.0 -> 1.0/steps` timesteps before shift math, matching ai-toolkit behavior more closely.
-- Default `steps=25` is set for closer ai-toolkit-style sample quality (you can still drop to 20 for faster Flux previews).
+- When available, the node attempts to use ai-toolkit's own scheduler backend first and falls back to local formulas automatically.

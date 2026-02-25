@@ -1,0 +1,2 @@
+# Match ai-toolkit's pinned diffusers build for closest flowmatch parity.
+git+https://github.com/huggingface/diffusers@8600b4c10d67b0ce200f664204358747bd53c775

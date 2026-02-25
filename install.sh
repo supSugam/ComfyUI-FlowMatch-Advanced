@@ -55,6 +55,9 @@ cp -f "$SCRIPT_DIR/flowmatch_nodes.py" "$DEST_DIR/"
 if [[ -f "$SCRIPT_DIR/README.md" ]]; then
   cp -f "$SCRIPT_DIR/README.md" "$DEST_DIR/"
 fi
+if [[ -f "$SCRIPT_DIR/requirements.txt" ]]; then
+  cp -f "$SCRIPT_DIR/requirements.txt" "$DEST_DIR/"
+fi
 
 echo "Installed to: $DEST_DIR"
 echo "Restart ComfyUI to load the updated nodes."
